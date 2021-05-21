@@ -37,6 +37,19 @@ describe('greet', ()=> { //When testing strings, make sure tests are not too spe
     });
 });
 
+describe('getProduct', () => {
+    it('should return the product with the given id', () => {
+        const result = lib.getProduct(1);
+        //with toEqual, result must have no less and no more props than those seen in 
+        //object being passed as argument in order for test to pass.
+        expect(result).toEqual({ id: 1, price: 10 }); 
+        //w/ toMatchObject, it just checks that the included props are equal
+        expect(result).toMatchObject({ id: 1, price: 10 }); 
+        //check by single property.
+        expect(result).toHaveProperty('id', 1);
+    });
+});
+
 describe('getCurrencies', () => {
     it('should return supported currencies', () => {
         const result = lib.getCurrencies();
