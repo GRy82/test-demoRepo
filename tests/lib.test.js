@@ -28,3 +28,35 @@ describe('absolute', ()=>{
         expect(result).toBe(0);
     });
 });
+
+describe('greet', ()=> { //When testing strings, make sure tests are not too specific.
+    it('should return the greeting message', () => {
+        const result = lib.greet('Greg');
+        expect(result).toMatch(/Greg/);
+        expect(result).toContain('Greg');
+    });
+});
+
+describe('getCurrencies', () => {
+    it('should return supported currencies', () => {
+        const result = lib.getCurrencies();
+
+        //Too general
+        //expect(result).toBeDefined
+        //expect(result).not.toBeNull();
+
+        //Too specific
+        // expect(result[0]).toBe('USD');
+        // expect(result[0]).toBe('AUD');
+        // expect(result[0]).toBe('EUR');
+        //expect(result.length).toBe(3);
+
+        //Acceptable Way
+        // expect(result).toContain('USD');
+        // expect(result).toContain('AUD');
+        // expect(result).toContain('EUR');
+
+        //Best Way
+        expect(result).toEqual(expect.arrayContaining(['USD', 'EUR', 'AUD']));
+    });
+});
