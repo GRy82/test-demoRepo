@@ -7,6 +7,9 @@
 //use toBeCloseTo() for floating point numbers.
 //toBeNull, toBeUndefined, toBeTruthy, toBeFalsy.
 
+//in package.json, set scripts.test: "jest --watchAll" to have Jest reload on save.
+//Jest will then provide you with updated test results in terminal.
+
 const lib = require('../lib');
 
 describe('absolute', ()=>{
@@ -71,5 +74,22 @@ describe('getCurrencies', () => {
 
         //Best Way
         expect(result).toEqual(expect.arrayContaining(['USD', 'EUR', 'AUD']));
+    });
+});
+
+//Some testers follow single assertion principle rigidly, and only do one 
+//assert or expect per 'it' function or 'test'.
+describe('registerUser', () => {
+    it('should throw if username is falsy', () => {
+        //can't be null undefined, NaN, '', 0, or false
+        const args = [null, undefined, NaN, '', 0, false];
+        args.forEach(a => {
+            expect(() => { lib.registerUser(a) }).toThrow();
+        });
+    });
+    it('should return a user object if valid username is passed', () => {
+        const result = lib.registerUser('greggyfresh4935');
+        expect(result).toHaveProperty('username', 'greggyfresh4935');
+        expect(result.id).toBeGreaterThan(0);
     });
 });
