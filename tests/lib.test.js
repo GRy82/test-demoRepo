@@ -11,7 +11,8 @@
 //Jest will then provide you with updated test results in terminal.
 
 const lib = require('../lib');
-const db = require('../db');
+const db = require('../db');//just one single instance in memory
+const mail = require ('../mail');//just one single instance in memory
 
 describe('absolute', ()=>{
     it('should return a positive number if input is positive', () => {
@@ -103,8 +104,35 @@ describe('applyDiscount', () => {
             return { id: customerId, points: 11 };
         }
         
-        const order = { customerId: 1, price: 10 };
+        const order = { customerId: 1, totalPrice: 10 };
         lib.applyDiscount(order);
         expect(order.totalPrice).toBe(9);
+    });
+});
+
+
+//acceptable way of creating mock functions. written as comments.
+//Best practice with jest uncommented to be compiled.
+describe('notifyCustomer', () => {
+    it('should send an email to the customer', () => {
+        db.getCustomerSync = jest.fn().mockReturnValue({ email: 'a' });
+        // db.getCustomerSync = function(customerId) {
+        //     return { email: 'a' }
+        // }
+
+        mail.send = jest.fn();
+        // let mailSent = false;
+        // mail.send = function(email, message) {
+        //     mailSent = true;
+        // }
+
+        lib.notifyCustomer({ customerId: 1 });
+
+        //toHaveBeenCalled works with mock functions. 
+        expect(mail.send).toHaveBeenCalled();
+        expect(mail.send.mock.calls[0][0]).toBe('a');//checks first call's first argument
+        expect(mail.send.mock.calls[0][1]).toMatch(/order/);//checks first call's secodn argument.
+        //expect(mail.send).toHaveBeenCalledWith('a', '...');
+        // expect(mailSent).toBe(true);
     });
 });
